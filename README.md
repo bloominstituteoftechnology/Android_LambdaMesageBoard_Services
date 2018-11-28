@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This app will extend the Lambda Message Board to allow users to 
+This app will extend the Lambda Message Board to allow users to subscribe to boards and show notifications when a new message is posted to that board. However, since this project is so large already, we won't be storing a list of subscribed boards.
 
 ## Instructions
 ### Part 1 - Create the Service
