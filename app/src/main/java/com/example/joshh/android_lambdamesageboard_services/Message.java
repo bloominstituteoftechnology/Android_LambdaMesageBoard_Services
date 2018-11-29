@@ -1,4 +1,4 @@
-package com.example.joshh.android_lambdamessages;
+package com.example.joshh.android_lambdamesageboard_services;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,3 +71,4 @@ public class Message {
         this.timestamp = timestamp;
     }
 }
+

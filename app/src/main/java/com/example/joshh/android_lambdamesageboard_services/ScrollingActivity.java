@@ -1,4 +1,4 @@
-package com.example.joshh.android_lambdamessages;
+package com.example.joshh.android_lambdamesageboard_services;
 
 import android.content.Context;
 import android.content.Intent;
@@ -91,3 +91,4 @@ public class ScrollingActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+

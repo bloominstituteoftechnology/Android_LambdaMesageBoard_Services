@@ -1,4 +1,4 @@
-package com.example.joshh.android_lambdamessages;
+package com.example.joshh.android_lambdamesageboard_services;
 
 import java.io.BufferedReader;
 import java.io.IOException;

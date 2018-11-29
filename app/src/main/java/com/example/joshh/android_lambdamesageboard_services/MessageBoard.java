@@ -1,4 +1,4 @@
-package com.example.joshh.android_lambdamessages;
+package com.example.joshh.android_lambdamesageboard_services;
 
 import android.annotation.SuppressLint;
 import android.os.Parcel;
@@ -67,7 +67,7 @@ public class MessageBoard implements Parcelable{
         }catch (JSONException e) {
             e.printStackTrace();
         }
-    return messages;
+        return messages;
     }
 
     @Override
@@ -81,3 +81,4 @@ public class MessageBoard implements Parcelable{
         dest.writeString(identifier);
     }
 }
+

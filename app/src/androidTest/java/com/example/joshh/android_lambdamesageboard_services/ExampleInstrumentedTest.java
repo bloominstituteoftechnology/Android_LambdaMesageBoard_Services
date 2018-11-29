@@ -1,4 +1,4 @@
-package com.example.joshh.android_lambdamessages;
+package com.example.joshh.android_lambdamesageboard_services;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.joshh.android_lambdamessages", appContext.getPackageName());
+        assertEquals("com.example.joshh.android_lambdamesageboard_services", appContext.getPackageName());
     }
 }

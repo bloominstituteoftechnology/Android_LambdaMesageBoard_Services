@@ -1,4 +1,4 @@
-package com.example.joshh.android_lambdamessages;
+package com.example.joshh.android_lambdamesageboard_services;
 
 import android.util.Log;
 
@@ -59,3 +59,4 @@ public class MessageBoardDao {
         }
     }
 }
+
