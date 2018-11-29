@@ -53,7 +53,6 @@ public class SubscriptionMonitorService extends Service {
         if(removeSubscription != null){
             subscriptionsList.remove(removeSubscription);
         }
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -63,22 +62,24 @@ public class SubscriptionMonitorService extends Service {
                     for(MessageBoard m : messageBoards){
                         for(String s : subscriptionsListCopy){
                             if(m.getIdentifier().equals(s)){
-                                Message message = m.getLastMessage(s);
-                                if(message.getTimestamp() > lastCheckTime){
-                                    final NotificationManager notificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
-                                    final String channelId = getPackageName() + ".channel";
-                                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                                        NotificationChannel channel = new NotificationChannel(
-                                                channelId,
-                                                "New Message Channel",
-                                                NotificationManager.IMPORTANCE_HIGH);
-                                        notificationManager.createNotificationChannel(channel);
+                                if(m.getMessages(m.getIdentifier()).size() != 0){
+                                    Message message = m.getLastMessage(s);
+                                    if(message.getTimestamp() > lastCheckTime){
+                                        final NotificationManager notificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+                                        final String channelId = getPackageName() + ".channel";
+                                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                                            NotificationChannel channel = new NotificationChannel(
+                                                    channelId,
+                                                    "New Message Channel",
+                                                    NotificationManager.IMPORTANCE_HIGH);
+                                            notificationManager.createNotificationChannel(channel);
+                                        }
+                                        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
+                                                .setContentTitle("New Message in Subscribed Board")
+                                                .setSmallIcon(android.R.drawable.ic_dialog_alert)
+                                                .setAutoCancel(true);
+                                        notificationManager.notify(0, builder.build());
                                     }
-                                    NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
-                                            .setContentTitle("New Message in Subscribed Board")
-                                            .setSmallIcon(android.R.drawable.ic_dialog_alert)
-                                            .setAutoCancel(true);
-                                    notificationManager.notify(0, builder.build());
                                 }
                             }
                         }

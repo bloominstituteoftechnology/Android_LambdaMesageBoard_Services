@@ -2,6 +2,7 @@ package com.example.joshh.android_lambdamesageboard_services;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -22,6 +23,8 @@ public class ScrollingActivity extends AppCompatActivity {
     public static final String BOARD_TO_SUBSCRIBE_KEY = "board_to_subscribe";
     public static final String MESSAGE_BOARD_KEY = "message_board_key";
     public static final String REMOVE_FROM_SUBSCRIBED_KEY = "remove_from_subscribed";
+    public static SharedPreferences sharedPrefs;
+    public static final String SHARED_PREFS = "com.example.joshh.android_lambdamesageboard_services" + ".prefs";
     ArrayList<MessageBoard> messageBoards = new ArrayList<>();
     Context context;
     LinearLayout linearLayout;
@@ -34,6 +37,7 @@ public class ScrollingActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         context = this;
         linearLayout = findViewById(R.id.message_board_linear_layout);
+        sharedPrefs = context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,6 +46,8 @@ public class ScrollingActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+
 
         new Thread(new Runnable() {
             @Override
@@ -69,19 +75,21 @@ public class ScrollingActivity extends AppCompatActivity {
                             tv.setOnLongClickListener(new View.OnLongClickListener() {
                                 @Override
                                 public boolean onLongClick(View v) {
-                                    Intent intent = new Intent(context, SubscriptionMonitorService.class);
-                                    if(m.isSubscribed()){
-                                        Log.i("sdsadas", "removed");
-                                        intent.putExtra(REMOVE_FROM_SUBSCRIBED_KEY, m.getIdentifier());
-                                        tv.setTextColor(getResources().getColor(R.color.textColor));
-                                        m.setSubscribed(false);
-                                    }else{
-                                        Log.i("sdsadas", "added");
-                                        intent.putExtra(BOARD_TO_SUBSCRIBE_KEY, m.getIdentifier());
-                                        tv.setTextColor(Color.YELLOW);
-                                        m.setSubscribed(true);
+                                    if(tv.getText().toString() != m.getIdentifier()){
+                                        Intent intent = new Intent(context, SubscriptionMonitorService.class);
+                                        if(m.isSubscribed()){
+                                            Log.i("sdsadas", "removed");
+                                            intent.putExtra(REMOVE_FROM_SUBSCRIBED_KEY, m.getIdentifier());
+                                            tv.setTextColor(getResources().getColor(R.color.textColor));
+                                            m.setSubscribed(false);
+                                        }else{
+                                            Log.i("sdsadas", "added");
+                                            intent.putExtra(BOARD_TO_SUBSCRIBE_KEY, m.getIdentifier());
+                                            tv.setTextColor(Color.YELLOW);
+                                            m.setSubscribed(true);
+                                        }
+                                        startService(intent);
                                     }
-                                    startService(intent);
                                     return false;
                                 }
                             });

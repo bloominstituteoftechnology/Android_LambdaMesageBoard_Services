@@ -77,18 +77,21 @@ public class ViewMessagesActivity extends AppCompatActivity {
             @Override
             public void run() {
                 messages = messageBoard.getMessages(messageBoard.getIdentifier());
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        for(Message m : messages){
-                            TextView tv = new TextView(context);
-                            tv.setText(m.getSender() + ": " +m.getText());
-                            tv.setTextSize(20);
-                            tv.setTextColor(getResources().getColor(R.color.textColor));
-                            messagesLinearLayout.addView(tv);
+                if(messages.size() != 0){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for(Message m : messages){
+                                TextView tv = new TextView(context);
+                                tv.setText(m.getSender() + ": " +m.getText());
+                                tv.setTextSize(20);
+                                tv.setTextColor(getResources().getColor(R.color.textColor));
+                                messagesLinearLayout.addView(tv);
+                            }
                         }
-                    }
-                });
+                    });
+                }
+
             }
         }).start();
 
