@@ -18,6 +18,8 @@ import java.util.ArrayList;
 
 public class ScrollingActivity extends AppCompatActivity {
 
+    public static final String BOARD_TO_SUBSCRIBE_KEY = "board_to_subscribe";
+    public static final String MESSAGE_BOARD_KEY = "message_board_key";
     ArrayList<MessageBoard> messageBoards = new ArrayList<>();
     Context context;
     LinearLayout linearLayout;
@@ -58,7 +60,7 @@ public class ScrollingActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(View v) {
                                     Intent viewMessagesIntent = new Intent(context, ViewMessagesActivity.class);
-                                    viewMessagesIntent.putExtra("message_board_key", m);
+                                    viewMessagesIntent.putExtra(MESSAGE_BOARD_KEY, m);
                                     startActivity(viewMessagesIntent);
                                 }
                             });
@@ -68,7 +70,7 @@ public class ScrollingActivity extends AppCompatActivity {
                                 public boolean onLongClick(View v) {
                                     Intent intent = new Intent(context, SubscriptionMonitorService.class);
                                     String boardIdentifier = m.getIdentifier();
-                                    intent.putExtra("board_to_subscribe", boardIdentifier);
+                                    intent.putExtra(BOARD_TO_SUBSCRIBE_KEY, boardIdentifier);
                                     startService(intent);
                                     return false;
                                 }

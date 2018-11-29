@@ -36,7 +36,7 @@ public class ViewMessagesActivity extends AppCompatActivity {
         contentText = findViewById(R.id.content_edit_text);
         postButton  = findViewById(R.id.post_button);
 
-        final MessageBoard messageBoard = getIntent().getParcelableExtra("message_board_key");
+        final MessageBoard messageBoard = getIntent().getParcelableExtra(ScrollingActivity.MESSAGE_BOARD_KEY);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

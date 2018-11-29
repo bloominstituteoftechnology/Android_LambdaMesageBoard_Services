@@ -70,6 +70,11 @@ public class MessageBoard implements Parcelable{
         return messages;
     }
 
+    public Message getLastMessage(String id){
+        getMessages(id);
+        return messages.get(messages.size() - 1);
+    }
+
     @Override
     public int describeContents() {
         return 0;
