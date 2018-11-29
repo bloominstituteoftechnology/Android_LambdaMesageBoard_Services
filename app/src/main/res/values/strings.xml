@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Lambda Boards</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_view_messages">Messages in board</string>
+</resources>
