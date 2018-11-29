@@ -18,6 +18,7 @@ public class SubscriptionMonitorService extends Service {
     private Long lastCheckTime;
     private String subscription;
     private Context context;
+    private ArrayList<String> subscriptionsList;
 
     public SubscriptionMonitorService() {
     }
@@ -36,35 +37,40 @@ public class SubscriptionMonitorService extends Service {
         lastCheckTime = System.currentTimeMillis() / 1000;
         subscription = "";
         context = this;
+        subscriptionsList = new ArrayList<>();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("SubscriptionMonitorServ", "onStartCommand started");
         subscription = intent.getStringExtra(ScrollingActivity.BOARD_TO_SUBSCRIBE_KEY);
+        subscriptionsList.add(subscription);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while(!subscription.equals("")){
+                    ArrayList<String> subscriptionsListCopy = new ArrayList<>(subscriptionsList);
                     ArrayList<MessageBoard> messageBoards = MessageBoardDao.getMessageBoards();
                     for(MessageBoard m : messageBoards){
-                        if(m.getIdentifier().equals(subscription)){
-                            Message message = m.getLastMessage(subscription);
-                            if(message.getTimestamp() > lastCheckTime){
-                                final NotificationManager notificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
-                                final String channelId = getPackageName() + ".channel";
-                                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                                    NotificationChannel channel = new NotificationChannel(
-                                            channelId,
-                                            "New Message Channel",
-                                            NotificationManager.IMPORTANCE_HIGH);
-                                    notificationManager.createNotificationChannel(channel);
+                        for(String s : subscriptionsListCopy){
+                            if(m.getIdentifier().equals(s)){
+                                Message message = m.getLastMessage(s);
+                                if(message.getTimestamp() > lastCheckTime){
+                                    final NotificationManager notificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+                                    final String channelId = getPackageName() + ".channel";
+                                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                                        NotificationChannel channel = new NotificationChannel(
+                                                channelId,
+                                                "New Message Channel",
+                                                NotificationManager.IMPORTANCE_HIGH);
+                                        notificationManager.createNotificationChannel(channel);
+                                    }
+                                    NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
+                                            .setContentTitle("New Message in Subscribed Board")
+                                            .setSmallIcon(android.R.drawable.ic_dialog_alert)
+                                            .setAutoCancel(true);
+                                    notificationManager.notify(0, builder.build());
                                 }
-                                NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
-                                        .setContentTitle("New Message in Subscribed Board")
-                                        .setSmallIcon(android.R.drawable.ic_dialog_alert)
-                                        .setAutoCancel(true);
-                                notificationManager.notify(0, builder.build());
                             }
                         }
                     }

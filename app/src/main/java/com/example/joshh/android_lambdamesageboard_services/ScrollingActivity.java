@@ -2,6 +2,7 @@ package com.example.joshh.android_lambdamesageboard_services;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -64,7 +65,6 @@ public class ScrollingActivity extends AppCompatActivity {
                                     startActivity(viewMessagesIntent);
                                 }
                             });
-                            linearLayout.addView(tv);
                             tv.setOnLongClickListener(new View.OnLongClickListener() {
                                 @Override
                                 public boolean onLongClick(View v) {
@@ -72,9 +72,11 @@ public class ScrollingActivity extends AppCompatActivity {
                                     String boardIdentifier = m.getIdentifier();
                                     intent.putExtra(BOARD_TO_SUBSCRIBE_KEY, boardIdentifier);
                                     startService(intent);
+                                    tv.setTextColor(Color.YELLOW);
                                     return false;
                                 }
                             });
+                            linearLayout.addView(tv);
                         }
                     }
                 });
