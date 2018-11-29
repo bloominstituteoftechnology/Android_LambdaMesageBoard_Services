@@ -63,6 +63,16 @@ public class ScrollingActivity extends AppCompatActivity {
                                 }
                             });
                             linearLayout.addView(tv);
+                            tv.setOnLongClickListener(new View.OnLongClickListener() {
+                                @Override
+                                public boolean onLongClick(View v) {
+                                    Intent intent = new Intent(context, SubscriptionMonitorService.class);
+                                    String boardIdentifier = m.getIdentifier();
+                                    intent.putExtra("board_to_subscribe", boardIdentifier);
+                                    startService(intent);
+                                    return false;
+                                }
+                            });
                         }
                     }
                 });
