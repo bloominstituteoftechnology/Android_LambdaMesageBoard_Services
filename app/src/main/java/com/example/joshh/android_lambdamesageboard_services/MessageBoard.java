@@ -13,12 +13,14 @@ import java.util.ArrayList;
 
 
 public class MessageBoard implements Parcelable{
-    String title, identifier;
-    ArrayList<Message> messages;
+    private String title, identifier;
+    private ArrayList<Message> messages;
+    private boolean isSubscribed;
 
     public MessageBoard(JSONObject jsonObject, String identifier) {
         //this.title = title;
         this.identifier = identifier;
+        this.isSubscribed = false;
         try {
             this.title = jsonObject.getString("title");
         } catch (JSONException e) {
@@ -45,6 +47,14 @@ public class MessageBoard implements Parcelable{
 
     public String getTitle() {
         return title;
+    }
+
+    public boolean isSubscribed() {
+        return isSubscribed;
+    }
+
+    public void setSubscribed(boolean subscribed) {
+        isSubscribed = subscribed;
     }
 
     public void setTitle(String title) {

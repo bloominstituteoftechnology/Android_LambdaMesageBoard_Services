@@ -21,6 +21,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
     public static final String BOARD_TO_SUBSCRIBE_KEY = "board_to_subscribe";
     public static final String MESSAGE_BOARD_KEY = "message_board_key";
+    public static final String REMOVE_FROM_SUBSCRIBED_KEY = "remove_from_subscribed";
     ArrayList<MessageBoard> messageBoards = new ArrayList<>();
     Context context;
     LinearLayout linearLayout;
@@ -51,9 +52,9 @@ public class ScrollingActivity extends AppCompatActivity {
                     public void run() {
                         for(final MessageBoard m : messageBoards){
                             final TextView tv = new TextView(context);
-                            tv.setText(m.title);
-                            if(m.title == null || m.title.equals("")){
-                                tv.setText(m.identifier);
+                            tv.setText(m.getTitle());
+                            if(m.getTitle() == null || m.getTitle().equals("")){
+                                tv.setText(m.getIdentifier());
                             }
                             tv.setTextSize(20);
                             tv.setTextColor(getResources().getColor(R.color.textColor));
@@ -69,10 +70,18 @@ public class ScrollingActivity extends AppCompatActivity {
                                 @Override
                                 public boolean onLongClick(View v) {
                                     Intent intent = new Intent(context, SubscriptionMonitorService.class);
-                                    String boardIdentifier = m.getIdentifier();
-                                    intent.putExtra(BOARD_TO_SUBSCRIBE_KEY, boardIdentifier);
+                                    if(m.isSubscribed()){
+                                        Log.i("sdsadas", "removed");
+                                        intent.putExtra(REMOVE_FROM_SUBSCRIBED_KEY, m.getIdentifier());
+                                        tv.setTextColor(getResources().getColor(R.color.textColor));
+                                        m.setSubscribed(false);
+                                    }else{
+                                        Log.i("sdsadas", "added");
+                                        intent.putExtra(BOARD_TO_SUBSCRIBE_KEY, m.getIdentifier());
+                                        tv.setTextColor(Color.YELLOW);
+                                        m.setSubscribed(true);
+                                    }
                                     startService(intent);
-                                    tv.setTextColor(Color.YELLOW);
                                     return false;
                                 }
                             });

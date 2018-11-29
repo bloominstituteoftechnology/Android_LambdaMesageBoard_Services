@@ -76,7 +76,7 @@ public class ViewMessagesActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                messages = messageBoard.getMessages(messageBoard.identifier);
+                messages = messageBoard.getMessages(messageBoard.getIdentifier());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

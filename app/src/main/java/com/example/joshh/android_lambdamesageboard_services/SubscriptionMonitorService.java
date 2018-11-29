@@ -17,6 +17,7 @@ public class SubscriptionMonitorService extends Service {
     public static final int CHECK_PERIOD = 3000;
     private Long lastCheckTime;
     private String subscription;
+    private String removeSubscription;
     private Context context;
     private ArrayList<String> subscriptionsList;
 
@@ -36,6 +37,7 @@ public class SubscriptionMonitorService extends Service {
         Log.i("SubscriptionMonitorServ", "onCreate started");
         lastCheckTime = System.currentTimeMillis() / 1000;
         subscription = "";
+        removeSubscription = "";
         context = this;
         subscriptionsList = new ArrayList<>();
     }
@@ -44,11 +46,18 @@ public class SubscriptionMonitorService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("SubscriptionMonitorServ", "onStartCommand started");
         subscription = intent.getStringExtra(ScrollingActivity.BOARD_TO_SUBSCRIBE_KEY);
-        subscriptionsList.add(subscription);
+        removeSubscription = intent.getStringExtra(ScrollingActivity.REMOVE_FROM_SUBSCRIBED_KEY);
+        if(subscription != null){
+            subscriptionsList.add(subscription);
+        }
+        if(removeSubscription != null){
+            subscriptionsList.remove(removeSubscription);
+        }
+
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while(!subscription.equals("")){
+                while(subscriptionsList.size() != 0){
                     ArrayList<String> subscriptionsListCopy = new ArrayList<>(subscriptionsList);
                     ArrayList<MessageBoard> messageBoards = MessageBoardDao.getMessageBoards();
                     for(MessageBoard m : messageBoards){
@@ -84,7 +93,6 @@ public class SubscriptionMonitorService extends Service {
                 stopSelf();
             }
         }).start();
-        Log.i("boardIdFromIntent", subscription);
         return super.onStartCommand(intent, flags, startId);
     }
 
