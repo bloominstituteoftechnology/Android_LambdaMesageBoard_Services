@@ -13,6 +13,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class MessageBoardListAdapter extends RecyclerView.Adapter<MessageBoardListAdapter.ViewHolder> {
+
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView messageBoardTitle, messageBoardContent;
         ViewGroup parentView;
@@ -57,6 +58,15 @@ public class MessageBoardListAdapter extends RecyclerView.Adapter<MessageBoardLi
                 Intent intent = new Intent(context, MessageViewActivity.class);
                 intent.putExtra(MessageViewActivity.VIEW_BOARD_KEY, data);
                 activity.startActivity(intent);
+            }
+        });
+        viewHolder.parentView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent intent = new Intent(context, SubscriptionMonitorService.class);
+                intent.putExtra(Constants.SERVICE_KEY, data.getIdentifier());
+                activity.startService(intent);
+                return true;
             }
         });
     }
