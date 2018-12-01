@@ -68,4 +68,13 @@ public class MessageBoard implements Parcelable {
         }
         this.messages = messageList;
     }
+
+    public static double getBoardLastMessageTimestamp(String identifier) {
+        double messageTimestamp = 0;
+        ArrayList<Message> messages = MessageBoardDao.getMessages(identifier);
+        messageTimestamp = messages.get(messages.size()-1).getTimestamp();
+        return messageTimestamp;
+    }
+
+
 }
