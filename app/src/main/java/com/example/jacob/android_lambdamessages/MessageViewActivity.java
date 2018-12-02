@@ -20,7 +20,6 @@ public class MessageViewActivity extends AppCompatActivity {
 
     public static final String VIEW_BOARD_KEY = "view board key";
     public static final int NEW_MESSAGE_CODE = 55;
-    public static final String MESSAGE_BOARD_KEY = "message board id";
 
     MessageBoard inputBoard;
     String boardId;
@@ -34,24 +33,24 @@ public class MessageViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_view);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         context = this;
         activity = this;
 
-        inputBoard = (MessageBoard) getIntent().getParcelableExtra(VIEW_BOARD_KEY);
+        inputBoard = getIntent().getParcelableExtra(VIEW_BOARD_KEY);
         boardId = inputBoard.getIdentifier();
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
                 Intent intent = new Intent(context, NewMessageActivity.class);
-                intent.putExtra(MESSAGE_BOARD_KEY, boardId);
+                intent.putExtra(Constants.MESSAGE_BOARD_KEY, boardId);
                 startActivityForResult(intent, NEW_MESSAGE_CODE);
 
             }
@@ -76,7 +75,7 @@ public class MessageViewActivity extends AppCompatActivity {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == NEW_MESSAGE_CODE) {
                 if (data != null) {
-                    final String returnedBoardId = data.getStringExtra(MESSAGE_BOARD_KEY);
+                    final String returnedBoardId = data.getStringExtra(Constants.MESSAGE_BOARD_KEY);
                     final Message returnedMessage = data.getParcelableExtra(NewMessageActivity.NEW_MESSAGE_KEY);
 
                     new Thread(new Runnable() {
@@ -109,8 +108,7 @@ public class MessageViewActivity extends AppCompatActivity {
 
         @Override
         protected ArrayList<Message> doInBackground(String... strings) {
-            final ArrayList<Message> messageList = MessageBoardDao.getMessages(strings[0]);
-            return messageList;
+            return MessageBoardDao.getMessages(strings[0]);
         }
     }
 }

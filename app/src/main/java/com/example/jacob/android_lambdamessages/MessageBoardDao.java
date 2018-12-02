@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MessageBoardDao {
     private static final String BASE_URL = "https://lambda-message-board.firebaseio.com/";
@@ -36,31 +37,17 @@ public class MessageBoardDao {
 
     public static ArrayList<Message> getMessages(String identifier) {
         ArrayList<Message> messages = new ArrayList<>();
-        MessageBoard board = null;
+        MessageBoard board;
         board = getBoard(identifier);
         if (board != null) {
             messages = board.getMessages();
         }
-
-/*        final String result = NetworkAdapter.httpRequest(String.format(MESSAGE_URL, identifier), NetworkAdapter.GET);
-
-        try {
-            JSONObject topLevel = new JSONObject(result);
-            JSONArray boardNames = topLevel.names();
-            for (int i = 0; i < boardNames.length(); ++i) {
-                final String id = boardNames.getString(i);
-                JSONObject json = topLevel.getJSONObject(id);
-                messages.add(new Message(json, id));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
         return messages;
     }
 
     public static MessageBoard getBoard(String identifier) {
         MessageBoard board = null;
-        String title = "";
+        String title;
         ArrayList<Message> messages = new ArrayList<>();
         final String result = NetworkAdapter.httpRequest(String.format(BOARD_URL, identifier), NetworkAdapter.GET);
 
@@ -74,6 +61,7 @@ public class MessageBoardDao {
                 JSONObject json = jsonObject.getJSONObject(id);
                 messages.add(new Message(json, id));
             }
+            Collections.reverse(messages);
             board = new MessageBoard(title, identifier, messages);
         } catch (JSONException e) {
             e.printStackTrace();

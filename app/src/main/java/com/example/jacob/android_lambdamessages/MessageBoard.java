@@ -10,30 +10,28 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class MessageBoard implements Parcelable {
-    String title, identifier;
-    ArrayList<Message> messages;
+    private String title, identifier;
+    private ArrayList<Message> messages;
 //    JSONObject json;
 
-    public MessageBoard(String title, String identifier) {
+    MessageBoard(String title, String identifier) {
         this.title = title;
         this.identifier = identifier;
         this.messages = MessageBoardDao.getMessages(identifier);
     }
 
-    public MessageBoard(String identifier) {
+    MessageBoard(String identifier) {
         this.identifier = identifier;
         MessageBoard board = MessageBoardDao.getBoard(identifier);
         this.title = board.title;
         this.messages = board.messages;
     }
 
-    public MessageBoard(String title, String identifier, ArrayList<Message> messages) {
+    MessageBoard(String title, String identifier, ArrayList<Message> messages) {
         this.title = title;
         this.identifier = identifier;
         this.messages = messages;
     }
-
-
 
     public static final Creator<MessageBoard> CREATOR = new Creator<MessageBoard>() {
         @Override
@@ -71,7 +69,7 @@ public class MessageBoard implements Parcelable {
         parcel.writeArray(messages.toArray());
     }
 
-    public MessageBoard(Parcel parcel) {
+    private MessageBoard(Parcel parcel) {
         this.title = parcel.readString();
         this.identifier = parcel.readString();
         Object[] objects = parcel.readArray(Message.class.getClassLoader());
@@ -84,10 +82,10 @@ public class MessageBoard implements Parcelable {
         this.messages = messageList;
     }
 
-    public static double getBoardLastMessageTimestamp(String identifier) {
-        double messageTimestamp = 0;
+    static double getBoardLastMessageTimestamp(String identifier) {
+        double messageTimestamp;
         ArrayList<Message> messages = MessageBoardDao.getMessages(identifier);
-        messageTimestamp = messages.get(messages.size()-1).getTimestamp();
+        messageTimestamp = messages.get(0).getTimestamp();
         return messageTimestamp;
     }
 

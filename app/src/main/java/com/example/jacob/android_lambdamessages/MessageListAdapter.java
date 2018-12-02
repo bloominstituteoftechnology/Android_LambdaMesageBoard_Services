@@ -56,7 +56,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
         viewHolder.messageSender.setText(data.getSender());
         viewHolder.messageText.setText(data.getText());
-        Date date = new Date((new Double(data.getTimestamp())).longValue()*1000);
+        Date date = new Date((Double.valueOf(data.getTimestamp())).longValue() * 1000);
         viewHolder.messageTimestamp.setText(String.valueOf(date));
     }
 

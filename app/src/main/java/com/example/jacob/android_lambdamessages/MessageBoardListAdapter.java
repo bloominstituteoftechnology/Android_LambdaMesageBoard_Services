@@ -56,6 +56,9 @@ public class MessageBoardListAdapter extends RecyclerView.Adapter<MessageBoardLi
         String subscriptionStatus = MainActivity.preferences.getString(data.getIdentifier(), "");
         if (!subscriptionStatus.equals("")) {
             viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+            Intent intent = new Intent(context, SubscriptionMonitorService.class);
+            intent.putExtra(Constants.SERVICE_KEY, data.getIdentifier());
+            activity.startService(intent);
         } else {
             viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
         }

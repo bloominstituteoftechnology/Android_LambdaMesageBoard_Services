@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Stetho.initializeWithDefaults(this);
+//        Stetho.initializeWithDefaults(this);
 
         context = this;
         activity = this;
@@ -39,11 +39,10 @@ public class MainActivity extends AppCompatActivity {
         layoutManager = new GridLayoutManager(context, LAYOUT_SPAN_COUNT);
         listView.setLayoutManager(layoutManager);
         ArrayList<MessageBoard> dummy = new ArrayList<>();
-        listAdapter = new MessageBoardListAdapter(dummy,activity);
+        listAdapter = new MessageBoardListAdapter(dummy, activity);
         listView.setAdapter(listAdapter);
         new offloadTask().execute();
     }
-
 
 
     public class offloadTask extends AsyncTask<Void, Integer, ArrayList<MessageBoard>> {
@@ -59,8 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected ArrayList<MessageBoard> doInBackground(Void... voids) {
-            final ArrayList<MessageBoard> messageBoards = MessageBoardDao.getAllMessageBoards();
-            return messageBoards;
+            return MessageBoardDao.getAllMessageBoards();
         }
     }
 

@@ -11,7 +11,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
+
 
 import java.util.ArrayList;
 
@@ -22,7 +22,7 @@ public class SubscriptionMonitorService extends Service {
     String subscription;
     Context context;
     NotificationManager notificationManager;
-    int notificationImportance = NotificationManager.IMPORTANCE_LOW;
+    int notificationImportance = NotificationManager.IMPORTANCE_DEFAULT;
     private static final int NOTIFICATION_ID_INSTANT = 354;
 
     public SubscriptionMonitorService() {
@@ -30,7 +30,6 @@ public class SubscriptionMonitorService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
         return null;
     }
 
@@ -55,9 +54,9 @@ public class SubscriptionMonitorService extends Service {
                 while (!subscription.equals("")) {
                     Log.i("Subscription", "Checking for new messages...");
                     ArrayList<String> boardIds = MessageBoardDao.getMessageBoardIds();
-                    if(boardIds.indexOf(subscription) != -1) {
+                    if (boardIds.indexOf(subscription) != -1) {
                         Double lastMessageTime = MessageBoard.getBoardLastMessageTimestamp(subscription);
-                        if(lastMessageTime > lastCheckTime) {
+                        if (lastMessageTime > lastCheckTime) {
                             String channelId = context.getPackageName() + ".subscription";
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 CharSequence name = "New Message Channel";
@@ -69,15 +68,15 @@ public class SubscriptionMonitorService extends Service {
 
                             Intent intent = new Intent(context, MainActivity.class);
                             MessageBoard board = new MessageBoard(subscription);
-                            intent.putExtra(MessageViewActivity.VIEW_BOARD_KEY,board);
-                            PendingIntent notifyPendingIntent = PendingIntent.getActivity(context,0,intent,PendingIntent.FLAG_ONE_SHOT);
+                            intent.putExtra(MessageViewActivity.VIEW_BOARD_KEY, board);
+                            PendingIntent notifyPendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
                             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
                                     .setPriority(notificationImportance)
                                     .setContentTitle("Message")
-                                    .setContentText("NewMessage")
+                                    .setContentText("New Message")
                                     .setColor(context.getColor(R.color.colorPrimary))
-                                    .addAction(R.drawable.ic_launcher_foreground,"View message board",notifyPendingIntent)
+//                                    .addAction(R.drawable.ic_launcher_foreground,"View message board",notifyPendingIntent)
                                     .setAutoCancel(true)
                                     .setSmallIcon(R.drawable.ic_launcher_foreground)
                                     .setDefaults(Notification.DEFAULT_ALL);
@@ -94,7 +93,6 @@ public class SubscriptionMonitorService extends Service {
                 stopSelf();
             }
         }).start();
-
 
 
         Log.i("Subscription to  board id: ", subscription);
