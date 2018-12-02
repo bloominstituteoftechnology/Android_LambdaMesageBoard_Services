@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/messageboard_element_parent_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="10dp"
+    card_view:cardBackgroundColor="@color/colorAccent"
+    android:elevation="2dp"
+    android:layout_margin="10dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_margin="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:textColor="@android:color/white"
+            android:id="@+id/messageboard_element_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MessageTitleHere"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!--<TextView-->
+            <!--android:textColor="@android:color/white"-->
+            <!--android:id="@+id/message_element_content"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Message Content ..."-->
+            <!--android:textSize="12sp" />-->
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

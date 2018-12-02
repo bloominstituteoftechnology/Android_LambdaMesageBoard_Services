@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Android_LambdaMessages</string>
+    <string name="title_activity_message_view">MessageViewActivity</string>
+</resources>
