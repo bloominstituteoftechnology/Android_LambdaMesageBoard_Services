@@ -1,17 +1,29 @@
 package com.example.jacob.android_lambdamessages;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class SubscriptionMonitorService extends Service {
 
-    public static final int CHECK_PERIOD = 60000;
+    public static final int CHECK_PERIOD = 5000;
     private Long lastCheckTime;
     String subscription;
+    Context context;
+    NotificationManager notificationManager;
+    int notificationImportance = NotificationManager.IMPORTANCE_DEFAULT;
+    private static final int NOTIFICATION_ID_INSTANT = 354;
 
     public SubscriptionMonitorService() {
     }
@@ -28,6 +40,7 @@ public class SubscriptionMonitorService extends Service {
         Log.i("Subscription", "onCreate: Method entered");
         lastCheckTime = System.currentTimeMillis() / 1000;
         subscription = "";
+        context = this;
     }
 
     @Override
@@ -39,11 +52,35 @@ public class SubscriptionMonitorService extends Service {
             @Override
             public void run() {
                 while (!subscription.equals("")) {
-                    ArrayList<MessageBoard> boards = MessageBoardDao.getMessageBoards();
-                    if(boards.indexOf(subscription) != -1) {
+                    Log.i("Subscription", "Checking for new messages...");
+                    ArrayList<String> boardIds = MessageBoardDao.getMessageBoardIds();
+                    if(boardIds.indexOf(subscription) != -1) {
                         Double lastMessageTime = MessageBoard.getBoardLastMessageTimestamp(subscription);
                         if(lastMessageTime > lastCheckTime) {
-                        //TODO Implement a notification here that a new message has come in. Part 3 step 20 and beyond.
+                            String channelId = getPackageName() + ".subscription";
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                CharSequence name = "New Message Channel";
+                                String description = "Notifications triggered by subscription monitor service";
+                                NotificationChannel channel = new NotificationChannel(channelId, name, notificationImportance);
+                                channel.setDescription(description);
+                                notificationManager.createNotificationChannel(channel);
+                            }
+
+                            Intent intent = new Intent(context, MainActivity.class);
+                            MessageBoard board = new MessageBoard(subscription);
+                            intent.putExtra(MessageViewActivity.VIEW_BOARD_KEY,board);
+                            PendingIntent notifyPendingIntent = PendingIntent.getActivity(context,0,intent,PendingIntent.FLAG_ONE_SHOT);
+
+                            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
+                                    .setPriority(notificationImportance)
+                                    .setContentTitle("Message")
+                                    .setContentText("NewMessage")
+                                    .setColor(context.getColor(R.color.colorPrimary))
+                                    .addAction(R.drawable.ic_launcher_foreground,"View message board",notifyPendingIntent)
+                                    .setAutoCancel(true)
+                                    .setSmallIcon(android.R.drawable.ic_dialog_alert)
+                                    .setDefaults(Notification.DEFAULT_ALL);
+                            notificationManager.notify(NOTIFICATION_ID_INSTANT, builder.build());
                         }
                     }
                     lastCheckTime = System.currentTimeMillis() / 1000;

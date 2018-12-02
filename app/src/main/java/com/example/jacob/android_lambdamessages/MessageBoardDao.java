@@ -1,12 +1,9 @@
 package com.example.jacob.android_lambdamessages;
 
-import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URL;
 import java.util.ArrayList;
 
 public class MessageBoardDao {
@@ -15,10 +12,11 @@ public class MessageBoardDao {
     private static final String URL_ENDING = ".json";
 
     private static final String BOARDS_URL = BASE_URL + URL_ENDING;
+    private static final String BOARD_URL = BASE_URL + "%s/" + URL_ENDING;
     private static final String MESSAGE_URL = BASE_URL + "%s/" + MESSAGE + URL_ENDING;
 
 
-    public static ArrayList<MessageBoard> getMessageBoards() {
+    public static ArrayList<MessageBoard> getAllMessageBoards() {
         ArrayList<MessageBoard> boards = new ArrayList<>();
         final String result = NetworkAdapter.httpRequest(BOARDS_URL, NetworkAdapter.GET);
 
@@ -38,7 +36,13 @@ public class MessageBoardDao {
 
     public static ArrayList<Message> getMessages(String identifier) {
         ArrayList<Message> messages = new ArrayList<>();
-        final String result = NetworkAdapter.httpRequest(String.format(MESSAGE_URL, identifier), NetworkAdapter.GET);
+        MessageBoard board = null;
+        board = getBoard(identifier);
+        if (board != null) {
+            messages = board.getMessages();
+        }
+
+/*        final String result = NetworkAdapter.httpRequest(String.format(MESSAGE_URL, identifier), NetworkAdapter.GET);
 
         try {
             JSONObject topLevel = new JSONObject(result);
@@ -50,8 +54,31 @@ public class MessageBoardDao {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        }
+        }*/
         return messages;
+    }
+
+    public static MessageBoard getBoard(String identifier) {
+        MessageBoard board = null;
+        String title = "";
+        ArrayList<Message> messages = new ArrayList<>();
+        final String result = NetworkAdapter.httpRequest(String.format(BOARD_URL, identifier), NetworkAdapter.GET);
+
+        try {
+            JSONObject topLevel = new JSONObject(result);
+            title = topLevel.getString("title");
+            JSONObject jsonObject = topLevel.getJSONObject("messages");
+            JSONArray boardNames = jsonObject.names();
+            for (int i = 0; i < boardNames.length(); ++i) {
+                final String id = boardNames.getString(i);
+                JSONObject json = jsonObject.getJSONObject(id);
+                messages.add(new Message(json, id));
+            }
+            board = new MessageBoard(title, identifier, messages);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return board;
     }
 
     public static void newMessage(String boardId, Message message) {
@@ -60,10 +87,19 @@ public class MessageBoardDao {
             jsonObject.put("sender", message.getSender());
             jsonObject.put("text", message.getText());
             jsonObject.put("timestamp", message.getTimestamp());
-            NetworkAdapter.httpRequest(String.format(MESSAGE_URL, boardId), NetworkAdapter.POST,jsonObject);
+            NetworkAdapter.httpRequest(String.format(MESSAGE_URL, boardId), NetworkAdapter.POST, jsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public static ArrayList<String> getMessageBoardIds() {
+        ArrayList<String> ids = new ArrayList<>();
+        ArrayList<MessageBoard> boards = getAllMessageBoards();
+        for (MessageBoard board : boards) {
+            ids.add(board.getIdentifier());
+        }
+        return ids;
     }
 
 }

@@ -20,6 +20,21 @@ public class MessageBoard implements Parcelable {
         this.messages = MessageBoardDao.getMessages(identifier);
     }
 
+    public MessageBoard(String identifier) {
+        this.identifier = identifier;
+        MessageBoard board = MessageBoardDao.getBoard(identifier);
+        this.title = board.title;
+        this.messages = board.messages;
+    }
+
+    public MessageBoard(String title, String identifier, ArrayList<Message> messages) {
+        this.title = title;
+        this.identifier = identifier;
+        this.messages = messages;
+    }
+
+
+
     public static final Creator<MessageBoard> CREATOR = new Creator<MessageBoard>() {
         @Override
         public MessageBoard createFromParcel(Parcel in) {
@@ -76,5 +91,15 @@ public class MessageBoard implements Parcelable {
         return messageTimestamp;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+
+    public void setMessages(ArrayList<Message> messages) {
+        this.messages = messages;
+    }
 }

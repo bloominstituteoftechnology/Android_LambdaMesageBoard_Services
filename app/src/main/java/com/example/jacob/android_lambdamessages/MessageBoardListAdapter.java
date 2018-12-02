@@ -3,7 +3,9 @@ package com.example.jacob.android_lambdamessages;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,10 +50,15 @@ public class MessageBoardListAdapter extends RecyclerView.Adapter<MessageBoardLi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         final MessageBoard data = dataList.get(i);
-
         viewHolder.messageBoardTitle.setText(data.getTitle());
+        String subscriptionStatus = MainActivity.preferences.getString(data.getIdentifier(), "");
+        if (!subscriptionStatus.equals("")) {
+            viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        } else {
+            viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+        }
         viewHolder.parentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,9 +70,22 @@ public class MessageBoardListAdapter extends RecyclerView.Adapter<MessageBoardLi
         viewHolder.parentView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                String id = data.getIdentifier();
+                String status = MainActivity.preferences.getString(id, "");
+                SharedPreferences.Editor editor = MainActivity.preferences.edit();
                 Intent intent = new Intent(context, SubscriptionMonitorService.class);
-                intent.putExtra(Constants.SERVICE_KEY, data.getIdentifier());
-                activity.startService(intent);
+                if (status.equals("")) {
+                    editor.putString(id, id);
+                    viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                    intent.putExtra(Constants.SERVICE_KEY, data.getIdentifier());
+                    activity.startService(intent);
+                } else {
+                    editor.remove(id);
+                    viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    intent.putExtra(Constants.SERVICE_KEY, "");
+                    activity.stopService(intent);
+                }
+                editor.apply();
                 return true;
             }
         });

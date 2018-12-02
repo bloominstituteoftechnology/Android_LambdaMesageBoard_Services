@@ -2,21 +2,21 @@ package com.example.jacob.android_lambdamessages;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
+
+import com.facebook.stetho.Stetho;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final int LAYOUT_SPAN_COUNT = 2;
+    public static SharedPreferences preferences;
 
     private Context context;
     private Activity activity;
@@ -29,9 +29,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Stetho.initializeWithDefaults(this);
 
         context = this;
         activity = this;
+        preferences = this.getPreferences(Context.MODE_PRIVATE);
 
         listView = findViewById(R.id.messageboard_recycler_view);
         layoutManager = new GridLayoutManager(context, LAYOUT_SPAN_COUNT);
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected ArrayList<MessageBoard> doInBackground(Void... voids) {
-            final ArrayList<MessageBoard> messageBoards = MessageBoardDao.getMessageBoards();
+            final ArrayList<MessageBoard> messageBoards = MessageBoardDao.getAllMessageBoards();
             return messageBoards;
         }
     }
