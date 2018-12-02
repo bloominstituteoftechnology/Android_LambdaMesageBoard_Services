@@ -17,12 +17,12 @@ import java.util.ArrayList;
 
 public class SubscriptionMonitorService extends Service {
 
-    public static final int CHECK_PERIOD = 5000;
+    public static final int CHECK_PERIOD = 15000;
     private Long lastCheckTime;
     String subscription;
     Context context;
     NotificationManager notificationManager;
-    int notificationImportance = NotificationManager.IMPORTANCE_DEFAULT;
+    int notificationImportance = NotificationManager.IMPORTANCE_LOW;
     private static final int NOTIFICATION_ID_INSTANT = 354;
 
     public SubscriptionMonitorService() {
@@ -41,6 +41,7 @@ public class SubscriptionMonitorService extends Service {
         lastCheckTime = System.currentTimeMillis() / 1000;
         subscription = "";
         context = this;
+        notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     @Override
@@ -57,7 +58,7 @@ public class SubscriptionMonitorService extends Service {
                     if(boardIds.indexOf(subscription) != -1) {
                         Double lastMessageTime = MessageBoard.getBoardLastMessageTimestamp(subscription);
                         if(lastMessageTime > lastCheckTime) {
-                            String channelId = getPackageName() + ".subscription";
+                            String channelId = context.getPackageName() + ".subscription";
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 CharSequence name = "New Message Channel";
                                 String description = "Notifications triggered by subscription monitor service";
@@ -78,7 +79,7 @@ public class SubscriptionMonitorService extends Service {
                                     .setColor(context.getColor(R.color.colorPrimary))
                                     .addAction(R.drawable.ic_launcher_foreground,"View message board",notifyPendingIntent)
                                     .setAutoCancel(true)
-                                    .setSmallIcon(android.R.drawable.ic_dialog_alert)
+                                    .setSmallIcon(R.drawable.ic_launcher_foreground)
                                     .setDefaults(Notification.DEFAULT_ALL);
                             notificationManager.notify(NOTIFICATION_ID_INSTANT, builder.build());
                         }
