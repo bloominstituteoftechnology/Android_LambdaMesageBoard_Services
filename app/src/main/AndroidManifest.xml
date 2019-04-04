@@ -12,7 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".EntryActivity"></activity>
+        <service
+            android:name=".MessageBoardService"
+            android:enabled="true"
+            android:exported="false"></service>
+
+        <activity android:name=".EntryActivity" />
         <activity android:name=".BoardActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

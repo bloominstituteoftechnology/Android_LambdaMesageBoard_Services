@@ -60,6 +60,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        view.setLongClickable(true);
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent intent = new Intent(context, MessageBoardService.class);
+                intent.putExtra("AddService", board.getTitle());
+                startService(intent);
+                return false;
+            }
+        });
         return view;
     }
 }
