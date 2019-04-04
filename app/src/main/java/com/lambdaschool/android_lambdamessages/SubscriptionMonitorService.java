@@ -7,6 +7,8 @@ import android.util.Log;
 
 public class SubscriptionMonitorService extends Service {
     private static final String TAG = "SubscriptionMonSvc in ";
+    public static final String SUBSCRIPTION_ADD = "subscription_add";
+
 
     public SubscriptionMonitorService() {
         Log.i(TAG, "constructor " + Thread.currentThread().getStackTrace()[2].getMethodName());
@@ -27,7 +29,8 @@ public class SubscriptionMonitorService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
-
+        String retrievedValue = intent.getStringExtra(SUBSCRIPTION_ADD);
+        stopSelf();
         return super.onStartCommand(intent, flags, startId);
     }
 

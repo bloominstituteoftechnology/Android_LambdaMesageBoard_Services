@@ -23,12 +23,21 @@ public class SolitaryActivity extends AppCompatActivity {
 
         final LinearLayout linearLayout = findViewById(R.id.linear_layout_solitary);
 
-        for (Message eachM : messageArrayList) {
+        for (final Message eachM : messageArrayList) {
             TextView textView = new TextView(getApplicationContext());
             textView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             textView.setPadding(5, 30, 5, 0);
             String formattedMessageBoard = "Sender: %s | Time: %d | id: %s | Text: %s";
             textView.setText(String.format(Locale.US, formattedMessageBoard, eachM.getSender(), (int) eachM.getTimestamp(), eachM.getId(), eachM.getText()));
+            textView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Intent intent = new Intent(v.getContext(), SubscriptionMonitorService.class);
+                    intent.putExtra(SubscriptionMonitorService.SUBSCRIPTION_ADD, eachM.getSender());
+                    startService(intent);
+                    return false;
+                }
+            });
             linearLayout.addView(textView);
         }
 
