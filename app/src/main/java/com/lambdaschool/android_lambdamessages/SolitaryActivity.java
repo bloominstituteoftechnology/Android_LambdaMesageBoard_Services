@@ -1,6 +1,7 @@
 package com.lambdaschool.android_lambdamessages;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,7 +25,7 @@ public class SolitaryActivity extends AppCompatActivity {
         final LinearLayout linearLayout = findViewById(R.id.linear_layout_solitary);
 
         for (final Message eachM : messageArrayList) {
-            TextView textView = new TextView(getApplicationContext());
+            final TextView textView = new TextView(getApplicationContext());
             textView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             textView.setPadding(5, 30, 5, 0);
             String formattedMessageBoard = "Sender: %s | Time: %d | id: %s | Text: %s";
@@ -32,6 +33,7 @@ public class SolitaryActivity extends AppCompatActivity {
             textView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
+                    textView.setBackgroundColor(Color.MAGENTA);
                     Intent intent = new Intent(v.getContext(), SubscriptionMonitorService.class);
                     intent.putExtra(SubscriptionMonitorService.SUBSCRIPTION_ADD, eachM.getSender());
                     startService(intent);
