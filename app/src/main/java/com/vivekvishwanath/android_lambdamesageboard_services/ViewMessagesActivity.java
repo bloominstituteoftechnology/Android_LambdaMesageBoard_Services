@@ -1,4 +1,4 @@
-package com.vivekvishwanath.android_lambdamessages;
+package com.vivekvishwanath.android_lambdamesageboard_services;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;

@@ -1,4 +1,4 @@
-package com.vivekvishwanath.android_lambdamessages;
+package com.vivekvishwanath.android_lambdamesageboard_services;
 
 import org.json.JSONArray;
 import org.json.JSONException;

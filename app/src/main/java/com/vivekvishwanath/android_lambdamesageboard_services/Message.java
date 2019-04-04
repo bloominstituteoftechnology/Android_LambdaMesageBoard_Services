@@ -1,4 +1,4 @@
-package com.vivekvishwanath.android_lambdamessages;
+package com.vivekvishwanath.android_lambdamesageboard_services;
 
 import android.os.Parcel;
 import android.os.Parcelable;
