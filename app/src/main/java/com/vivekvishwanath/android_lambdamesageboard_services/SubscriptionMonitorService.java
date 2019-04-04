@@ -20,6 +20,7 @@ public class SubscriptionMonitorService extends Service {
     private Context context;
     private static final int NOTIFICATION_ID = 11;
     private static final int CHECK_PERIOD = 5000;
+    ArrayList<String> subscriptions;
 
     public SubscriptionMonitorService() {
     }
@@ -36,6 +37,7 @@ public class SubscriptionMonitorService extends Service {
         lastCheckTime = System.currentTimeMillis() / 1000;
         subscription = "";
         context = this;
+        subscriptions = new ArrayList<>();
         super.onCreate();
     }
 
@@ -43,22 +45,26 @@ public class SubscriptionMonitorService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("Service", "Entered onStartCommand");
         subscription = intent.getStringExtra("add_subscription");
+        subscriptions.add(subscription);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean flag = false;
                 while (subscription != "") {
                     ArrayList<MessageBoard> messageBoards = MessageBoardDao.getMessageBoards();
+                    ArrayList<String> subscriptionsCopy = new ArrayList<>(subscriptions);
                     for (int i = 0; i < messageBoards.size(); i++) {
-                        String identifier = messageBoards.get(i).getIdentifier();
-                        if (identifier.equals(subscription)) {
-                            int numMessages = messageBoards.get(i).getMessages().size();
-                            double lastMessageTime = messageBoards.get(i).getMessages().get(numMessages - 1).getTimestamp();
-                            if (lastMessageTime > lastCheckTime) {
-                                flag = true;
+                        for (int j = 0; j < subscriptionsCopy.size(); j++) {
+                            if (subscriptionsCopy.get(j).equals(messageBoards.get(i).getIdentifier())) {
+                                int numMessages = messageBoards.get(i).getMessages().size();
+                                double lastMessageTime = messageBoards.get(i).getMessages().get(numMessages - 1).getTimestamp();
+                                if (lastMessageTime > lastCheckTime) {
+                                    flag = true;
+                                }
                             }
                         }
                     }
+
                     lastCheckTime = System.currentTimeMillis() / 1000;
                     if (flag) {
                         NotificationManager manager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);

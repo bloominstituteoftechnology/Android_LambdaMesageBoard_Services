@@ -49,6 +49,12 @@ public class MainActivity extends AppCompatActivity {
                     view.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_dark));
+                                }
+                            });
                             String boardIdentifier = messageBoard.getIdentifier();
                             Intent serviceIntent = new Intent(context, SubscriptionMonitorService.class);
                             serviceIntent.putExtra("add_subscription", boardIdentifier);
