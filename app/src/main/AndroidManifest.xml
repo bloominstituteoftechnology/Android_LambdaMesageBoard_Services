@@ -15,7 +15,7 @@
             android:name=".SubscriptionMonitorService"
             android:enabled="true"
             android:exported="false"></service>
-
+        <activity android:name=".ViewMessagesActivity"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

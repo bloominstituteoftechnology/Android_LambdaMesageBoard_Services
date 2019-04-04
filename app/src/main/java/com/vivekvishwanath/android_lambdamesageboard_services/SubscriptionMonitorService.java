@@ -24,6 +24,8 @@ public class SubscriptionMonitorService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("Service", "Entered onStartCommand");
+        String boardIdentifier = intent.getStringExtra("add_subscription");
+        stopSelf();
         return super.onStartCommand(intent, flags, startId);
     }
 

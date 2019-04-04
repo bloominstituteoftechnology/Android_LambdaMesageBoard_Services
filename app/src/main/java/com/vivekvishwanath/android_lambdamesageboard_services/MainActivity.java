@@ -46,6 +46,16 @@ public class MainActivity extends AppCompatActivity {
                             messageBoardsLayout.addView(view);
                         }
                     });
+                    view.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            String boardIdentifier = messageBoard.getIdentifier();
+                            Intent serviceIntent = new Intent(context, SubscriptionMonitorService.class);
+                            serviceIntent.putExtra("add_subscription", boardIdentifier);
+                            startService(serviceIntent);
+                            return true;
+                        }
+                    });
                 }
             }
         }).start();
