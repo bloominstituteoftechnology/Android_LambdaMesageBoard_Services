@@ -49,25 +49,26 @@ public class MessageBoardService extends Service {
                                     }
 
                                     NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelID)
-                                            .setContentTitle("Jake's Notifications")
-                                            .setContentText("You were just sent a notification from me!(You)")
+                                            .setContentTitle("Lambda Message Boards")
+                                            .setContentText("A new message was posted to the message board")
                                             .setSmallIcon(android.R.drawable.gallery_thumb)
                                             .setPriority(NotificationManager.IMPORTANCE_HIGH)
                                             .setColor(getResources().getColor(R.color.colorPrimary))
                                             .setDefaults(Notification.DEFAULT_ALL);
 
                                     notificationManager.notify(1, builder.build());
+                                    lastCheckTime = System.currentTimeMillis() / 1000;
+                                    try {
+                                        Thread.sleep(100000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
 
                                 }
                             }
                         }
                     }
-                    lastCheckTime = System.currentTimeMillis() / 1000;
-                    try {
-                        Thread.sleep(100000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+
 
                 }
 
