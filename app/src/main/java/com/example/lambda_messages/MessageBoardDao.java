@@ -25,12 +25,13 @@ public class MessageBoardDao {
                 String key = it.next();
                 try {
                     final JSONObject jsonEntry = jsonObject.getJSONObject(key);
+                    JSONObject jsonMessages = jsonEntry.getJSONObject("messages");
                     String title = jsonEntry.getString("title");
                     String id = key;
 
 
 
-                    resultList.add(new MessageBoard(title, id, messageJsonObject));
+                    resultList.add(new MessageBoard(title, id, jsonMessages));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 ArrayList<MessageBoard> arList = MessageBoardDao.getMessageBoards();
-                ArrayList<Message> msList = MessageBoardDao.getMessages(arList.get(0).getIdentifier());
+              //  ArrayList<Message> msList = MessageBoardDao.getMessages(arList.get(0).getIdentifier());
             }
         }).start();
 

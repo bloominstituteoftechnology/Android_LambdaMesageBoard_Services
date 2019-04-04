@@ -1,6 +1,5 @@
 package com.example.lambda_messages;
 
-import org.json.JSONObject;
 
 public class Message {
 
@@ -12,8 +11,7 @@ public class Message {
         this.sender = sender;
         this.text = text;
         this.key = key;
-        this.senderId = null;
-        this.timestamp = System.currentTimeMillis() / 1000;
+        this.timestamp = timestamp;
     }
 
     public String getSender() {
