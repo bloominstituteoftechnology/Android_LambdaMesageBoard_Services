@@ -10,7 +10,7 @@ import java.util.Iterator;
 public class MessageBoard{
 
 String title, identifier;
-ArrayList<Message> messages;
+ArrayList<Message> messages = new ArrayList<>();
 
     public MessageBoard(String title, String identifier, JSONObject jsonObject) {
         this.title = title;
