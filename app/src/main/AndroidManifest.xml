@@ -12,7 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".SolitaryActivity"></activity>
+        <service
+            android:name=".SubscriptionMonitorService"
+            android:enabled="true"
+            android:exported="false"></service>
+
+        <activity android:name=".SolitaryActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
