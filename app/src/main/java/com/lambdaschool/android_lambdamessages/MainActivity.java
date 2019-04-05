@@ -1,6 +1,7 @@
 package com.lambdaschool.android_lambdamessages;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
                         LinearLayout linearLayout = findViewById(R.id.linear_layout_main);
 
                         for (final MessageBoard eachMB : messageBoardArrayList) {
-                            TextView textView = new TextView(getApplicationContext());
+                            final TextView textView = new TextView(getApplicationContext());
                             textView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                             textView.setPadding(5, 30, 5, 0);
                             textView.setText(eachMB.getTitle() + " ... " + eachMB.getIdentifier());
@@ -41,6 +42,29 @@ public class MainActivity extends AppCompatActivity {
                                     Intent intent = new Intent(getApplicationContext(), SolitaryActivity.class);
                                     intent.putParcelableArrayListExtra("messageboard", eachMB.getMessages());
                                     startActivity(intent);
+                                }
+                            });
+                            textView.setOnLongClickListener(new View.OnLongClickListener() {
+                                @Override
+                                public boolean onLongClick(View v) {
+                                    String subscriptionAction;
+                                    if (eachMB.isSubscribed()) {
+                                        textView.setBackgroundColor(Color.TRANSPARENT);
+                                        subscriptionAction = SubscriptionMonitorService.SUBSCRIPTION_REMOVE;
+                                        messageBoardArrayList.remove(eachMB);
+                                        eachMB.setSubscribed(false);
+                                        messageBoardArrayList.add(eachMB);
+                                    } else {
+                                        subscriptionAction = SubscriptionMonitorService.SUBSCRIPTION_ADD;
+                                        textView.setBackgroundColor(Color.MAGENTA);
+                                        messageBoardArrayList.remove(eachMB);
+                                        eachMB.setSubscribed(true);
+                                        messageBoardArrayList.add(eachMB);
+                                    }
+                                    Intent intent = new Intent(v.getContext(), SubscriptionMonitorService.class);
+                                    intent.putExtra(subscriptionAction, eachMB.getIdentifier());
+                                    startService(intent);
+                                    return false;
                                 }
                             });
                             linearLayout.addView(textView);

@@ -11,11 +11,15 @@ import java.util.ArrayList;
 
 public class MessageBoard implements Parcelable {
     private String title, identifier;
+    private boolean subscribed;
+    private long lastCheckTime;
     private ArrayList<Message> messages;
 
     public MessageBoard(String title, String identifier) {
         this.title = title;
         this.identifier = identifier;
+        this.subscribed = false;
+        this.lastCheckTime = System.currentTimeMillis() / 1000;
         this.messages = new ArrayList<>();
     }
 
@@ -26,6 +30,8 @@ public class MessageBoard implements Parcelable {
             e.printStackTrace();
         }
         this.identifier = identifier;
+        this.subscribed = false;
+        this.lastCheckTime = System.currentTimeMillis() / 1000;
         this.messages = new ArrayList<>();
 
         JSONArray jsonArray;
@@ -50,6 +56,8 @@ public class MessageBoard implements Parcelable {
     public MessageBoard(Parcel in) {
         this.title = in.readString();
         this.identifier = in.readString();
+        this.subscribed = false;
+        this.lastCheckTime = System.currentTimeMillis() / 1000;
         this.messages = new ArrayList<>();
 
         Object[] parceledObjects = in.readArray(Message.class.getClassLoader());
@@ -59,6 +67,22 @@ public class MessageBoard implements Parcelable {
                 this.messages.add((Message) eachParceled);
             }
         }
+    }
+
+    public long getLastCheckTime() {
+        return lastCheckTime;
+    }
+
+    public void setLastCheckTime(long lastCheckTime) {
+        this.lastCheckTime = lastCheckTime;
+    }
+
+    public boolean isSubscribed() {
+        return subscribed;
+    }
+
+    public void setSubscribed(boolean subscribed) {
+        this.subscribed = subscribed;
     }
 
     public String getTitle() {
