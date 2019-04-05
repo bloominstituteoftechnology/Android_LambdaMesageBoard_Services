@@ -1,6 +1,5 @@
 package com.vivekvishwanath.android_lambdamesageboard_services;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
@@ -16,7 +15,8 @@ import java.util.ArrayList;
 public class SubscriptionMonitorService extends Service {
 
     private static long lastCheckTime;
-    String subscription;
+    String newSubscription;
+    String removeSubscription;
     private Context context;
     private static final int NOTIFICATION_ID = 11;
     private static final int CHECK_PERIOD = 5000;
@@ -35,7 +35,8 @@ public class SubscriptionMonitorService extends Service {
     public void onCreate() {
         Log.i("Service", "Entered onCreate");
         lastCheckTime = System.currentTimeMillis() / 1000;
-        subscription = "";
+        newSubscription = "";
+        removeSubscription = "";
         context = this;
         subscriptions = new ArrayList<>();
         super.onCreate();
@@ -44,13 +45,18 @@ public class SubscriptionMonitorService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("Service", "Entered onStartCommand");
-        subscription = intent.getStringExtra("add_subscription");
-        subscriptions.add(subscription);
+        newSubscription = intent.getStringExtra("add_subscription");
+        removeSubscription = intent.getStringExtra("remove_subscription");
+        if (removeSubscription == null) {
+            subscriptions.add(newSubscription);
+        } else if (newSubscription == null) {
+            subscriptions.remove(removeSubscription);
+        }
         new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean flag = false;
-                while (subscription != "") {
+                while (subscriptions.size() != 0) {
                     ArrayList<MessageBoard> messageBoards = MessageBoardDao.getMessageBoards();
                     ArrayList<String> subscriptionsCopy = new ArrayList<>(subscriptions);
                     for (int i = 0; i < messageBoards.size(); i++) {
@@ -69,7 +75,6 @@ public class SubscriptionMonitorService extends Service {
                     if (flag) {
                         NotificationManager manager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            CharSequence name = getPackageName();
                             String description = "MessageBoard Subscription Channel";
                             int importance = NotificationManager.IMPORTANCE_HIGH;
                             NotificationChannel channel = new NotificationChannel(getPackageName(), description, importance);

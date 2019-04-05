@@ -13,14 +13,17 @@ public class MessageBoard implements Parcelable {
 
     private String title, identifier;
     private ArrayList<Message> messages = new ArrayList<>();
+    private boolean isSubscribed;
 
     public MessageBoard(String title, String identifer) {
         this.title = title;
         this.identifier = identifer;
+        this.isSubscribed = false;
     }
 
     public MessageBoard(JSONObject messageBoardJSON, String identifier) {
         this.identifier = identifier;
+        this.isSubscribed = false;
         try {
             this.title = messageBoardJSON.getString("title");
         } catch (JSONException e) {
@@ -46,6 +49,7 @@ public class MessageBoard implements Parcelable {
         for (int i = 0; i < parcelArray.length; i++) {
             messages.add((Message) parcelArray[i]);
         }
+        this.isSubscribed = false;
     }
 
     public static final Creator<MessageBoard> CREATOR = new Creator<MessageBoard>() {
@@ -70,6 +74,14 @@ public class MessageBoard implements Parcelable {
 
     public ArrayList<Message> getMessages() {
         return messages;
+    }
+
+    public boolean isSubscribed() {
+        return isSubscribed;
+    }
+
+    public void setSubscribed(boolean subscribed) {
+        isSubscribed = subscribed;
     }
 
     @Override

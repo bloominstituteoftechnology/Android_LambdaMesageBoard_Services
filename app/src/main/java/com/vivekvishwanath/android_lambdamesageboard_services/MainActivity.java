@@ -52,13 +52,26 @@ public class MainActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    view.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_dark));
+                                    if (messageBoard.isSubscribed()) {
+                                        view.setBackgroundColor(getResources().getColor(android.R.color.white));
+                                    } else {
+                                        view.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_dark));
+                                    }
                                 }
                             });
                             String boardIdentifier = messageBoard.getIdentifier();
-                            Intent serviceIntent = new Intent(context, SubscriptionMonitorService.class);
-                            serviceIntent.putExtra("add_subscription", boardIdentifier);
-                            startService(serviceIntent);
+                            if (!messageBoard.isSubscribed()) {
+                                messageBoard.setSubscribed(true);
+                                Intent addSubscriptionIntent = new Intent(context, SubscriptionMonitorService.class);
+                                addSubscriptionIntent.putExtra("add_subscription", boardIdentifier);
+                                startService(addSubscriptionIntent);
+                            }
+                            else {
+                                messageBoard.setSubscribed(false);
+                                Intent removeSubscriptionIntent = new Intent(context, SubscriptionMonitorService.class);
+                                removeSubscriptionIntent.putExtra("remove_subscription", boardIdentifier);
+                                startService(removeSubscriptionIntent);
+                            }
                             return true;
                         }
                     });
